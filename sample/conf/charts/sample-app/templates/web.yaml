@@ -3,7 +3,7 @@
 {{- $name := printf "%s-%s" $app $component -}}
 
 {{- if .Values.app.domain }}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: "{{ $name }}"
@@ -18,8 +18,11 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: {{ $name }}
-              servicePort: {{ .Values.app.port }}
+              service:
+                name: {{ $name }}
+                port:
+                  number: {{ .Values.app.port }}
+            pathType: Prefix
   tls:
     - hosts:
       - "{{ .Values.app.domain }}"
