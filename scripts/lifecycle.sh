@@ -23,11 +23,11 @@ section "Access the Cluster"
 
 info_pause_exec "List clusters" "k3d cluster list"
 
-info_pause_exec "Update the default kubeconfig with the new cluster details" "k3d kubeconfig merge milkyway --merge-default-kubeconfig --switch-context"
-# info "Cluster Name: milkyway"
-# info "--merge-default-kubeconfig true: overwrite existing fields with the same name in kubeconfig (true by default)"
-# info "--switch-context true: set the kubeconfig's current-context to the new cluster context (false by default)"
+info_pause_exec "Update the default kubeconfig with the new cluster details" "k3d kubeconfig merge milkyway -d -s"
 
+# info "Cluster Name: milkyway"
+# info "-d: overwrite existing fields with the same name in kubeconfig (true by default)"
+# info "-s: set the kubeconfig's current-context to the new cluster context (false by default)"
 
 info_pause_exec "Use kubectl to checkout the nodes" "kubectl get nodes"
 
@@ -38,7 +38,9 @@ info_pause_exec "Build the sample-app" "docker build sample/ -f sample/Dockerfil
 info_pause_exec "Load the sample-app image into the cluster" "k3d image import -c milkyway sample-app:local"
 
 info_pause_exec "Create a new 'milkyway' namespace" "kubectl create namespace milkyway"
+
 info_pause_exec "Switch to the new 'milkyway' namespace" "kubens milkyway"
+
 info_pause_exec "Deploy the sample app with helm" "helm upgrade --install sample-app sample/conf/charts/sample-app --namespace milkyway --set app.image=sample-app:local"
 
 info_pause_exec "Access the sample app frontend via ingress" "firefox --new-window http://sample.k3d.localhost:8080 &>/dev/null &"
